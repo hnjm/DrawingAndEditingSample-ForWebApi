@@ -38,7 +38,7 @@ namespace DrawingAndEditing.Controllers
                 layerOverlay.Layers.Add(drawnShapesFeatureLayer);
             }
 
-            // Draw the map and return the image back to client in an HttpResponseMessage. 
+            // Draw the map and return the image back to client in an HttpResponseMessage.
             using (Bitmap bitmap = new Bitmap(256, 256))
             {
                 PlatformGeoCanvas geoCanvas = new PlatformGeoCanvas();
@@ -73,7 +73,7 @@ namespace DrawingAndEditing.Controllers
         {
             if (!string.IsNullOrEmpty(modifiedShapesInJson))
             {
-                // Parse the JSON. 
+                // Parse the JSON.
                 // There are 2 groups of shapes, one is for shapes removed on client side,
                 // and the other is for shapes added on client side.
                 JObject jObject = JObject.Parse(modifiedShapesInJson);
@@ -113,7 +113,7 @@ namespace DrawingAndEditing.Controllers
                 string geoJson = item.ToString();
                 if (geoJson.Contains("\"type\": \"Circle\""))
                 {
-                    // Circle is not supported in standard GeoJSON, it's defined in this sample to make it easier to pass to the server.   
+                    // Circle is not supported in standard GeoJSON, it's defined in this sample to make it easier to pass to the server.
                     feature = CreateCircleFeatureFromGeoJson(geoJson);
                 }
                 else
@@ -121,7 +121,7 @@ namespace DrawingAndEditing.Controllers
                     feature = Feature.CreateFeatureFromGeoJson(geoJson);
                 }
 
-                if (feature != null && feature.GetWellKnownBinary() != null)
+                if (feature?.GetWellKnownBinary() != null)
                 {
                     features.Add(feature);
                 }
