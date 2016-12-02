@@ -2,7 +2,7 @@
 
 ### Description
 
-This samples shows you how to implement drawing and editing shapes into your web application.
+This sample demonstrates how to implement drawing and editing shapes into your web application.
 
 ![Screenshot](https://github.com/ThinkGeo/DrawingAndEditingSample-ForWebApi/blob/master/ScreenShot.png)
 
@@ -17,11 +17,11 @@ Working...
 
 ### Getting Help
 
-[Map Suite Platform Wiki Resources](http://wiki.thinkgeo.com/wiki/map_suite_platform_edition)
+[Map Suite WebAPI Wiki Resources](http://wiki.thinkgeo.com/wiki/map_suite_webapi_edition)
 
-[Map Suite Platform Product Description](http://thinkgeo.com/map-suite-developer-gis/platform-edition/)
+[Map Suite WebAPI Product Description](http://thinkgeo.com/map-suite-developer-gis/webapi-edition/)
 
-[ThinkGeo Community Site](http://community.thinkgeo.com/)
+[ThinkGeo Community Site](http://community.thinkgeo.com/c/map-suite-webapi-edition-support)
 
 [ThinkGeo Web Site](http://www.thinkgeo.com)
 
