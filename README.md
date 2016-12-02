@@ -2,6 +2,8 @@
 
 ### Description
 
+This samples shows you how to implement drawing and editing shapes into your web application.
+
 ![Screenshot](https://github.com/ThinkGeo/DrawingAndEditingSample-ForWebApi/blob/master/ScreenShot.png)
 
 ### Requirements
