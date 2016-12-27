@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingAndEditing_LeafletNuget", "Leaflet\DrawingAndEditing_LeafletNuget.csproj", "{69429537-0ED2-4263-A66E-0456F17CC7B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingAndEditing_Leaflet", "Leaflet\DrawingAndEditing_Leaflet.csproj", "{69429537-0ED2-4263-A66E-0456F17CC7B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingAndEditing_OpenLayersNuget", "OpenLayers\DrawingAndEditing_OpenLayersNuget.csproj", "{60531091-7CB7-4FDE-AA5E-FEF9EE15A424}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingAndEditing_Openlayers", "OpenLayers\DrawingAndEditing_Openlayers.csproj", "{60531091-7CB7-4FDE-AA5E-FEF9EE15A424}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
