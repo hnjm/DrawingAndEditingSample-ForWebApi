@@ -190,7 +190,7 @@ namespace DrawingAndEditing.Controllers
 
         private static void SaveFeatures(string accessId, Collection<Feature> features)
         {
-            string jsonFilePath = GetFullPath(Path.Combine("App_Data\\Temp", string.Format("{0}.json", accessId)));
+            string jsonFilePath = GetFullPath(Path.Combine("App_Data/Temp", string.Format("{0}.json", accessId)));
             using (StreamWriter streamWriter = new StreamWriter(jsonFilePath, false))
             {
                 foreach (Feature feature in features)
@@ -204,7 +204,7 @@ namespace DrawingAndEditing.Controllers
         private static Collection<Feature> GetFeatures(string accessId)
         {
             Collection<Feature> features = new Collection<Feature>();
-            string jsonFilePath = GetFullPath(Path.Combine("App_Data\\Temp", string.Format("{0}.json", accessId)));
+            string jsonFilePath = GetFullPath(Path.Combine("App_Data/Temp", string.Format("{0}.json", accessId)));
             if (File.Exists(jsonFilePath))
             {
                 string[] geojsons = File.ReadAllLines(jsonFilePath);
