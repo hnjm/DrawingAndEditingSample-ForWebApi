@@ -4,7 +4,7 @@
 
 This sample demonstrates how to implement drawing and editing shapes into your web application.
 
-Please refer to [Wiki](System.String[]) for the details.
+Please refer to [Wiki](http://wiki.thinkgeo.com/wiki/map_suite_web_for_webapi) for the details.
 
 ![Screenshot](https://github.com/ThinkGeo/DrawingAndEditingSample-ForWebApi/blob/master/ScreenShot.png)
 
