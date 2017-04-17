@@ -1,4 +1,4 @@
-# Drawing And Editing Sample for WebApi
+# Drawing And Editing Sample
 
 ### Description
 
