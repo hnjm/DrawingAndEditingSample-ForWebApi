@@ -14,9 +14,20 @@ This sample makes use of the following NuGet Packages
 [MapSuite 10.0.0](https://www.nuget.org/packages?q=ThinkGeo)
 
 ### About the Code
+```csharp
+PlatformGeoCanvas geoCanvas = new PlatformGeoCanvas();
+RectangleShape boundingBox = WebApiExtentHelper.GetBoundingBoxForXyz(x, y, z, GeographyUnit.Meter);
+geoCanvas.BeginDrawing(bitmap, boundingBox, GeographyUnit.Meter);
+layerOverlay.Draw(geoCanvas);
+geoCanvas.EndDrawing();
 
-Working...
+MemoryStream memoryStream = new MemoryStream();
+bitmap.Save(memoryStream, ImageFormat.Png);
 
+HttpResponseMessage responseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+responseMessage.Content = new ByteArrayContent(memoryStream.ToArray());
+responseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+```
 ### Getting Help
 
 [Map Suite WebAPI Wiki Resources](http://wiki.thinkgeo.com/wiki/map_suite_web_for_webapi)
@@ -30,7 +41,9 @@ Working...
 ### Key APIs
 This example makes use of the following APIs:
 
-Working...
+- [ThinkGeo.MapSuite.Drawing.GeoCanvas](http://wiki.thinkgeo.com/wiki/api/thinkgeo.mapsuite.drawing.geocanvas)
+- [ThinkGeo.MapSuite.Layers.PrinterLayer](http://wiki.thinkgeo.com/wiki/api/thinkgeo.mapsuite.layers.printerlayer)
+- [ThinkGeo.MapSuite.WebApi.LayerOverlay](http://wiki.thinkgeo.com/wiki/api/thinkgeo.mapsuite.webapi.layeroverlay)
 
 ### About Map Suite
 Map Suite is a set of powerful development components and services for the .Net Framework.
