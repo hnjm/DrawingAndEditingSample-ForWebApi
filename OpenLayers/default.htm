@@ -90,7 +90,7 @@
                                 tempGeoJSON = geoJsons[i];
                                 transfterGeoJSON(tempGeoJSON, 'EPSG:4326', 'EPSG:3857');
                                 var tempFeature = getFeatureFromGeoJson(tempGeoJSON);
-                                featureOverlay.addFeature(tempFeature);
+                                source.addFeature(tempFeature);
                                 editingData.removedIds.push(tempFeature.getId());
                             }
                             tileLayer.setVisible(false);
@@ -112,61 +112,56 @@
                     map.addInteraction(selectInteraction);
                 }
             },
-                {
-                    src: 'Images/save.png',
-                    id: 'imgSave',
-                    title: 'Save to server',
-                    callback: function () {
-                        var features = featureOverlay.getFeatures().getArray();
-                        var featureLength = features.length;
-                        for (var i = 0; i < featureLength; i++) {
-                            var tempGeoJSON = getGeoJsonFromFeature(features[i]);
-                            transfterGeoJSON(tempGeoJSON, 'EPSG:3857', 'EPSG:4326');
+            {
+                src: 'Images/save.png',
+                id: 'imgSave',
+                title: 'Save to server',
+                callback: function () {
+                    var features = source.getFeatures();
+                    var featureLength = features.length;
+                    for (var i = 0; i < featureLength; i++) {
+                        var tempGeoJSON = JSON.parse(getGeoJsonFromFeature(features[i]));
+                        transfterGeoJSON(tempGeoJSON, 'EPSG:3857', 'EPSG:4326');
 
-                            editingData.newShapes.push(tempGeoJSON);
-                        }
-
-                        // Save the drawn features to server side in GeoJson format
-                        $.post(getRootPath() + '/edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
-                            xyzSource.setUrl(getRootPath() + "/edit/{z}/{x}/{y}/" + accessId);
-                            tileLayer.setVisible(true);
-
-                            editingData.removedIds.length = 0;
-                            editingData.newShapes.length = 0;
-                        });
-
-                        for (var i = featureLength - 1; i > -1; i--) {
-                            featureOverlay.removeFeature(features[i]);
-                        }
-
-                        disenableAllInteractions();
-                        editServerShapes = false;
+                        editingData.newShapes.push(tempGeoJSON);
                     }
+
+                    // Save the drawn features to server side in GeoJson format
+                    $.post(getRootPath() + '/edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
+                        xyzSource.setUrl(getRootPath() + "/edit/{z}/{x}/{y}/" + accessId);
+                        tileLayer.setVisible(true);
+
+                        editingData.removedIds.length = 0;
+                        editingData.newShapes.length = 0;
+                    });
+
+                    for (var i = featureLength - 1; i > -1; i--) {
+                        source.removeFeature(features[i]);
+                    }
+
+                    disenableAllInteractions();
+                    editServerShapes = false;
                 }
+            }
             ]
         });
         map.addControl(imgControls);
 
-        // Added WorldMapKit Online as the background map.
-        var worldmapkitlayer = new ol.layer.Tile({
-            source: new ol.source.TileWMS(({
-                urls: ['http://worldmapkit1.thinkgeo.com/CachedWMSServer/WmsServer.axd',
-                    'http://worldmapkit2.thinkgeo.com/CachedWMSServer/WmsServer.axd',
-                    'http://worldmapkit3.thinkgeo.com/CachedWMSServer/WmsServer.axd',
-                    'http://worldmapkit4.thinkgeo.com/CachedWMSServer/WmsServer.axd',
-                    'http://worldmapkit5.thinkgeo.com/CachedWMSServer/WmsServer.axd',
-                    'http://worldmapkit6.thinkgeo.com/CachedWMSServer/WmsServer.axd'],
+        // Add thinkgeo map
+        var thinkGeoCloudMapLayer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'https://gisserver{1-6}.thinkgeo.com/api/v1/maps/raster/light/x1/3857/512/{z}/{x}/{y}.png',
+                maxZoom: 19,
+                tileSize: 512,
                 params:
-                    {
-                        'LAYERS': 'OSMWorldMapKitLayer',
-                        'VERSION': '1.1.1'
-                    },
-                attributions: [new ol.Attribution({
-                    html: '<a href="http://thinkgeo.com/map-suite-developer-gis/world-map-kit-sdk/">ThinkGeo</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
-                })]
-            }))
+                {
+                    'LAYERS': 'ThinkGeoCloudMaps',
+                    'VERSION': '10.4.0',
+                    'STYLE': 'Light'
+                }
+            })
         });
-        map.addLayer(worldmapkitlayer);
+        map.addLayer(thinkGeoCloudMapLayer);
 
         // Add the layer to the map to render the shapes which we will be editing.
         var xyzSource = new ol.source.XYZ({
@@ -181,8 +176,10 @@
         })
         map.addLayer(tileLayer);
 
-        // Initialise the FeatureGroup to save editable layers
-        var featureOverlay = new ol.FeatureOverlay({
+        var source = new ol.source.Vector();
+
+        var layer = new ol.layer.Vector({
+            source: source,
             style: new ol.style.Style({
                 fill: new ol.style.Fill({
                     color: 'rgba(0, 153, 255, 0.4)'
@@ -199,7 +196,8 @@
                 })
             })
         });
-        featureOverlay.setMap(map);
+        map.addLayer(layer);
+
 
         // Initialise the select interaction for selecting features for edit
         var selectInteraction = new ol.interaction.Select({
@@ -235,7 +233,7 @@
         function setDrawMode(drawType) {
             disenableAllInteractions();
             draw = new ol.interaction.Draw({
-                features: featureOverlay.getFeatures(),
+                features: source.getFeatures(),
                 type: drawType
             });
             draw.on('drawend', function (e) {
@@ -307,7 +305,7 @@
             var features = e.target.getArray();
             if (features.length > 0) {
                 var id = features[0].getId();
-                featureOverlay.removeFeature(features[0]);
+                source.removeFeature(features[0]);
                 var selectionFeatures = selectInteraction.getFeatures();
                 selectionFeatures.remove(features[0]);
                 editingData.removedIds.push(id);
@@ -326,6 +324,7 @@
             if (drawingFeature) {
                 var shapeName = $('#txtName').val();
                 drawingFeature.setProperties({ name: shapeName });
+                source.addFeature(drawingFeature);
                 $('#txtName').val('');
                 drawingFeature = null;
             }
