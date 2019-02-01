@@ -128,7 +128,7 @@
 
                     // Save the drawn features to server side in GeoJson format
                     $.post(getRootPath() + 'edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
-                        xyzSource.setUrl(getRootPath() + "edit/{z}/{x}/{y}/" + accessId);
+                        xyzSource.setUrl(getRootPath() + "edit/{z}/{x}/{y}/" + accessId + '?autokey=' + Math.random());
                         tileLayer.setVisible(true);
 
                         editingData.removedIds.length = 0;
