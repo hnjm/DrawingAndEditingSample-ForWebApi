@@ -84,7 +84,7 @@
                 callback: function () {
                     if (!editServerShapes) {
                         editServerShapes = true;
-                        $.get(getRootPath() + '/edit/getshapes/' + accessId, function (data) {
+                        $.get(getRootPath() + 'edit/getshapes/' + accessId, function (data) {
                             var geoJsons = JSON.parse(data);
                             for (var i = 0; i < geoJsons.length; i++) {
                                 tempGeoJSON = geoJsons[i];
@@ -127,8 +127,8 @@
                     }
 
                     // Save the drawn features to server side in GeoJson format
-                    $.post(getRootPath() + '/edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
-                        xyzSource.setUrl(getRootPath() + "/edit/{z}/{x}/{y}/" + accessId);
+                    $.post(getRootPath() + 'edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
+                        xyzSource.setUrl(getRootPath() + "edit/{z}/{x}/{y}/" + accessId);
                         tileLayer.setVisible(true);
 
                         editingData.removedIds.length = 0;
@@ -165,7 +165,7 @@
 
         // Add the layer to the map to render the shapes which we will be editing.
         var xyzSource = new ol.source.XYZ({
-            url: getRootPath() + "/edit/{z}/{x}/{y}/" + accessId,
+            url: getRootPath() + "edit/{z}/{x}/{y}/" + accessId,
             maxZoom: 19
         });
         xyzSource.tileLoadFunction = function (imageTile, src) {
