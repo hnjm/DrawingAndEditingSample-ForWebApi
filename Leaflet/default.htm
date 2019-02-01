@@ -55,7 +55,7 @@
         }).addTo(map);
 
         // Add the layer to the map to render the shapes which we will be editing.
-        var shapeLayer = L.dynamicLayer(getRootPath() + "/edit/{z}/{x}/{y}/" + accessId);
+        var shapeLayer = L.dynamicLayer(getRootPath() + "edit/{z}/{x}/{y}/" + accessId);
         shapeLayer.on('loading', function () {
             $('#loadingImage').show();
         })
@@ -96,11 +96,11 @@
                         }, this);
 
                         // Save the drawn features to server side in GeoJSON format
-                        $.post(getRootPath() + '/edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
+                        $.post(getRootPath() + 'edit/saveshapes/' + accessId, { '': JSON.stringify(editingData) }, function (data) {
                             if (shapeLayer) {
                                 map.removeLayer(shapeLayer);
                             }
-                            shapeLayer = L.dynamicLayer(getRootPath() + "/edit/{z}/{x}/{y}/" + accessId).addTo(map);
+                            shapeLayer = L.dynamicLayer(getRootPath() + "edit/{z}/{x}/{y}/" + accessId).addTo(map);
                             shapeLayer.on('loading', function () {
                                 $('#loadingImage').show();
                             })
@@ -140,7 +140,7 @@
         $('.leaflet-draw-edit-edit').click(function (e) {
             if (!editServerShapes) {
                 editServerShapes = true;
-                $.get(getRootPath() + '/edit/getshapes/' + accessId, function (data) {
+                $.get(getRootPath() + 'edit/getshapes/' + accessId, function (data) {
                     var geoJsons = JSON.parse(data);
                     for (var i = 0; i < geoJsons.length; i++) {
                         var vectorlayer = L.GeoJSON.geometryToLayer(geoJsons[i].geometry);

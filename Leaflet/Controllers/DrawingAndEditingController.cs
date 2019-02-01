@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Web.Http;
 using System.Xml.Linq;
 using ThinkGeo.MapSuite;
@@ -69,38 +70,50 @@ namespace DrawingAndEditing.Controllers
 
         [Route("saveshapes/{accessId}")]
         [HttpPost]
-        public void SaveShapes(string accessId, [FromBody] string modifiedShapesInJson)
+        public HttpResponseMessage SaveShapes(string accessId, [FromBody] string modifiedShapesInJson)
         {
-            if (!string.IsNullOrEmpty(modifiedShapesInJson))
+            try
             {
-                // Parse the JSON.
-                // There are 2 groups of shapes, one is for shapes removed on client side,
-                // and the other is for shapes added on client side.
-                JObject jObject = JObject.Parse(modifiedShapesInJson);
-
-                InMemoryFeatureLayer shapesFeatureLayer = GetDrawnShapesFeatureLayer(accessId);
-                shapesFeatureLayer.Open();
-
-                // Deal with removed shapes.
-                string[] ids = jObject["removedIds"].ToObject<string[]>();
-                foreach (var id in ids)
+                if (!string.IsNullOrEmpty(modifiedShapesInJson))
                 {
-                    if (shapesFeatureLayer.InternalFeatures.Count > 0)
+                    // Parse the JSON.
+                    // There are 2 groups of shapes, one is for shapes removed on client side,
+                    // and the other is for shapes added on client side.
+                    JObject jObject = JObject.Parse(modifiedShapesInJson);
+
+                    InMemoryFeatureLayer shapesFeatureLayer = GetDrawnShapesFeatureLayer(accessId);
+                    shapesFeatureLayer.Open();
+
+                    // Deal with removed shapes.
+                    string[] ids = jObject["removedIds"].ToObject<string[]>();
+                    foreach (var id in ids)
                     {
-                        shapesFeatureLayer.InternalFeatures.Remove(id);
+                        if (shapesFeatureLayer.InternalFeatures.Count > 0)
+                        {
+                            shapesFeatureLayer.InternalFeatures.Remove(id);
+                        }
                     }
+
+                    // Deal with newly added shapes.
+                    string featureGeoJsons = jObject["newShapes"].ToString();
+                    foreach (Feature feature in CreateFeaturesFromGeoJsons(featureGeoJsons))
+                    {
+                        shapesFeatureLayer.InternalFeatures.Add(feature.Id, feature);
+                    }
+                    shapesFeatureLayer.Close();
+
+                    // Update the local saved features for a specific access id.
+                    SaveFeatures(accessId, shapesFeatureLayer.InternalFeatures);
                 }
 
-                // Deal with newly added shapes.
-                string featureGeoJsons = jObject["newShapes"].ToString();
-                foreach (Feature feature in CreateFeaturesFromGeoJsons(featureGeoJsons))
-                {
-                    shapesFeatureLayer.InternalFeatures.Add(feature.Id, feature);
-                }
-                shapesFeatureLayer.Close();
-
-                // Update the local saved features for a specific access id.
-                SaveFeatures(accessId, shapesFeatureLayer.InternalFeatures);
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+                return responseMessage;
+            }
+            catch (Exception exception)
+            {
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                responseMessage.Content = new StringContent(exception.ToString(), Encoding.UTF8, "text/plain");
+                return responseMessage;
             }
         }
 
