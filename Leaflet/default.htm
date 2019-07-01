@@ -47,7 +47,7 @@
 
         // Added ThinkGeoCloudMaps as the background map.
         L.tileLayer('https://{s}.thinkgeo.com/api/v1/maps/raster/light/x1/3857/256/{z}/{x}/{y}.png', {
-            subdomains: ['gisserver1', 'gisserver2', 'gisserver3', 'gisserver4', 'gisserver5', 'gisserver6'],
+            subdomains: ['cloud1', 'cloud2', 'cloud3', 'cloud4', 'cloud5', 'cloud6'],
             layers: 'ThinkGeoCloudMaps',
             format: 'image/png',
             styles: 'Light',
@@ -119,7 +119,7 @@
             ]
         }).addTo(map);
 
-        // Hook up the shape created event. 
+        // Hook up the shape created event.
         map.on('draw:created', function (e) {
             drawingLayer = e.layer;
             drawingLayer.id = guid();
@@ -128,7 +128,7 @@
             showDlg();
         });
 
-        // Hook up the shape deleted event . 
+        // Hook up the shape deleted event .
         map.on('draw:deleted', function (e) {
             var layers = e.layers;
             layers.eachLayer(function (layer) {
@@ -136,7 +136,7 @@
             });
         });
 
-        // Handle click events for different types of shapes. 
+        // Handle click events for different types of shapes.
         $('.leaflet-draw-edit-edit').click(function (e) {
             if (!editServerShapes) {
                 editServerShapes = true;
@@ -213,7 +213,7 @@
             $('#dlgName').slideToggle("fast");
         }
 
-        // Add a utility method to get root path. 
+        // Add a utility method to get root path.
         function getRootPath() {
             var pathArray = location.pathname.split('/');
             var appPath = "/";
@@ -224,7 +224,7 @@
             return appPath === "/" ? "" : appPath;
         };
 
-        // Add a utility methods to get guid. 
+        // Add a utility methods to get guid.
         function guid() {
             function s4() {
                 return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
